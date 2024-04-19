@@ -1,14 +1,13 @@
-"use client"
-
-import { SignIn } from '@clerk/nextjs' //this is a Clerk component
-import React from 'react'
+"use client";
+import { SignIn } from "@clerk/nextjs";
+import React from "react";
 
 function page() {
   return (
-    <div>
+    <div className="flex items-center justify-center h-full">
       <SignIn />
     </div>
-  )
+  );
 }
 
-export default page
+export default page;

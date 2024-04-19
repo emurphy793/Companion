@@ -1,102 +1,142 @@
 "use client";
 import { useGlobalState } from "@/app/context/globalProvider";
-import React, {useState} from 'react';
-import toast from 'react-hot-toast';
-import axios from 'axios';
+import axios from "axios";
+import React, { useState } from "react";
+import toast from "react-hot-toast";
 import styled from "styled-components";
+import Button from "../Button/Button";
+import { add, plus } from "@/app/utils/Icons";
 
 function CreateContent() {
-    //these are used to store the values of the input fields
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
-    const [date, setDate] = useState('');
-    const [completed, setCompleted] = useState(false);
-    const [important, setImportant] = useState(false);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [date, setDate] = useState("");
+  const [completed, setCompleted] = useState(false);
+  const [important, setImportant] = useState(false);
 
-    const {theme} = useGlobalState();
+  const { theme, allTasks, closeModal } = useGlobalState();
 
-    //this switch statement is used to handle the different input fields
-    const handleChange = (name: string) => (e: any) => {
-        switch(name) {
-            case 'title':
-                setTitle(e.target.value);
-                break;
-            case 'description':
-                setDescription(e.target.value);
-                break;
-            case 'date':
-                setDate(e.target.value);
-                break;
-            case 'completed':
-                setCompleted(e.target.checked);
-                break;
-            case 'important':
-                setImportant(e.target.checked);
-                break;
-            default:
-                break;    
-        }
+  const handleChange = (name: string) => (e: any) => {
+    switch (name) {
+      case "title":
+        setTitle(e.target.value);
+        break;
+      case "description":
+        setDescription(e.target.value);
+        break;
+      case "date":
+        setDate(e.target.value);
+        break;
+      case "completed":
+        setCompleted(e.target.checked);
+        break;
+      case "important":
+        setImportant(e.target.checked);
+        break;
+      default:
+        break;
     }
+  };
 
-    //this function is used to handle the form submission
-    const handleSubmit = async (e: any) => {
-        e.preventDefault();
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
 
-        const task = {
-            title,
-            description,
-            date,
-            completed,
-            important
-        };
-
-        try {
-            const res = await axios.post('/api/tasks', task);
-
-            if(res.data.error) {
-                toast.error(res.data.error);
-            }
-            toast.success("Task successfully created");
-        } catch (error) {
-            toast.error("Something went wrong with task post request");
-            console.log("ERROR POSTING TASK: ", error);
-        }
+    const task = {
+      title,
+      description,
+      date,
+      completed,
+      important,
     };
 
-    //this is the form that will be rendered
+    try {
+      const res = await axios.post("/api/tasks", task);
+
+      if (res.data.error) {
+        toast.error(res.data.error);
+      }
+
+      if (!res.data.error) {
+        toast.success("Task created successfully.");
+        allTasks();
+        closeModal();
+      }
+    } catch (error) {
+      toast.error("Something went wrong.");
+      console.log(error);
+    }
+  };
+
   return (
     <CreateContentStyled onSubmit={handleSubmit} theme={theme}>
-        <h1>Create a Task</h1>
-        <div className='input-control'>
-            <label htmlFor='title'>Title</label>
-            <input type='text' id='title' value={title} name='title' onChange={handleChange("title")} placeholder='Create a Task' />
-        </div>
-        <div className='input-control'>
-            <label htmlFor='description'>Description</label>
-            <textarea value={description} name='description' 
-                onChange={handleChange("description")} placeholder='Task Description'>
-            </textarea>
-        </div>
-        <div className='input-control'>
-            <label htmlFor='date'>DueDate</label>
-            <input type='date' id='date' value={date} name='date' onChange={handleChange("date")} placeholder='Create a Task' />
-        </div>
-        <div className='input-control'>
-            <label htmlFor='completed'>Completed</label>
-            <input type='checkbox' id='completed' value={completed.toString()} name='completed' onChange={handleChange("completed")} />
-        </div>    
-        <div className='input-control'>
-            <label htmlFor='important'>Important</label>
-            <input type='checkbox' id='important' value={important.toString()} name='important' onChange={handleChange("important")} />
-        </div>   
+      <h1>Create a Task</h1>
+      <div className="input-control">
+        <label htmlFor="title">Title</label>
+        <input
+          type="text"
+          id="title"
+          value={title}
+          name="title"
+          onChange={handleChange("title")}
+          placeholder="e.g, Watch a video from Fireship."
+        />
+      </div>
+      <div className="input-control">
+        <label htmlFor="description">Description</label>
+        <textarea
+          value={description}
+          onChange={handleChange("description")}
+          name="description"
+          id="description"
+          rows={4}
+          placeholder="e.g, Watch a video about Next.js Auth"
+        ></textarea>
+      </div>
+      <div className="input-control">
+        <label htmlFor="date">Date</label>
+        <input
+          value={date}
+          onChange={handleChange("date")}
+          type="date"
+          name="date"
+          id="date"
+        />
+      </div>
+      <div className="input-control toggler">
+        <label htmlFor="completed">Toggle Completed</label>
+        <input
+          value={completed.toString()}
+          onChange={handleChange("completed")}
+          type="checkbox"
+          name="completed"
+          id="completed"
+        />
+      </div>
+      <div className="input-control toggler">
+        <label htmlFor="important">Toggle Important</label>
+        <input
+          value={important.toString()}
+          onChange={handleChange("important")}
+          type="checkbox"
+          name="important"
+          id="important"
+        />
+      </div>
 
-        <div className='submit-btn'>
-            <button type='submit'>
-                <span>Submit</span>
-            </button>
-        </div>
+      <div className="submit-btn flex justify-end">
+        <Button
+          type="submit"
+          name="Create Task"
+          icon={add}
+          padding={"0.8rem 2rem"}
+          borderRad={"0.8rem"}
+          fw={"500"}
+          fs={"1.2rem"}
+          background={"rgb(0, 163, 255)"}
+        />
+      </div>
     </CreateContentStyled>
-  )
+  );
 }
 
 const CreateContentStyled = styled.form`
@@ -105,8 +145,6 @@ const CreateContentStyled = styled.form`
     font-weight: 600;
   }
 
-  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.3);
-  border-radius: ${(props) => props.theme.borderRadiusMd2};
   color: ${(props) => props.theme.colorGrey1};
 
   .input-control {
@@ -119,7 +157,7 @@ const CreateContentStyled = styled.form`
     }
 
     label {
-      margin-bottom: 1rem;
+      margin-bottom: 0.5rem;
       display: inline-block;
       font-size: clamp(0.9rem, 5vw, 1.2rem);
 
@@ -132,7 +170,6 @@ const CreateContentStyled = styled.form`
     textarea {
       width: 100%;
       padding: 1rem;
-      border: none;
 
       resize: none;
       background-color: ${(props) => props.theme.colorGreyDark};
