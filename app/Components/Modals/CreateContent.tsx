@@ -105,6 +105,8 @@ const CreateContentStyled = styled.form`
     font-weight: 600;
   }
 
+  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.3);
+  border-radius: ${(props) => props.theme.borderRadiusMd2};
   color: ${(props) => props.theme.colorGrey1};
 
   .input-control {
@@ -117,7 +119,7 @@ const CreateContentStyled = styled.form`
     }
 
     label {
-      margin-bottom: 0.5rem;
+      margin-bottom: 1rem;
       display: inline-block;
       font-size: clamp(0.9rem, 5vw, 1.2rem);
 
@@ -130,6 +132,7 @@ const CreateContentStyled = styled.form`
     textarea {
       width: 100%;
       padding: 1rem;
+      border: none;
 
       resize: none;
       background-color: ${(props) => props.theme.colorGreyDark};
