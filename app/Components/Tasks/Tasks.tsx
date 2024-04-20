@@ -10,10 +10,11 @@ import CategoryDropdown from "../CategoryDropdown/CategoryDropdown";
 
 interface Props {
   title: string;
+  tasks: any[];
 }
 
-function Tasks({ title }: Props) {
-  const { theme, isLoading, openModal, modal, tasks, categories, selectedCategory, setSelectedCategory } = useGlobalState();
+function Tasks({ title, tasks }: Props) {
+  const { theme, isLoading, openModal, modal, categories, selectedCategory, setSelectedCategory } = useGlobalState();
   
 
   // State to hold filtered tasks
