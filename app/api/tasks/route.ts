@@ -10,7 +10,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized", status: 401 });
     }
 
-    const { title, description, date, completed, important } = await req.json();
+    const { title, description, category, date, completed, important } = await req.json();
 
     if (!title || !description || !date) {
       return NextResponse.json({
@@ -30,6 +30,7 @@ export async function POST(req: Request) {
       data: {
         title,
         description,
+        category,
         date,
         isCompleted: completed,
         isImportant: important,

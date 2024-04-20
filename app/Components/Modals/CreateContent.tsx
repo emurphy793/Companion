@@ -10,6 +10,7 @@ import { add, plus } from "@/app/utils/Icons";
 function CreateContent() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [category, setCategory] = useState("");
   const [date, setDate] = useState("");
   const [completed, setCompleted] = useState(false);
   const [important, setImportant] = useState(false);
@@ -21,6 +22,9 @@ function CreateContent() {
       case "title":
         setTitle(e.target.value);
         break;
+      case "category":
+        setCategory(e.target.value);
+        break;  
       case "description":
         setDescription(e.target.value);
         break;
@@ -44,6 +48,7 @@ function CreateContent() {
     const task = {
       title,
       description,
+      category,
       date,
       completed,
       important,
@@ -78,7 +83,18 @@ function CreateContent() {
           value={title}
           name="title"
           onChange={handleChange("title")}
-          placeholder="e.g, Watch a video from Fireship."
+          placeholder="e.g, Prepare for client meeting"
+        />
+      </div>
+      <div className="input-control">
+        <label htmlFor="category">Category</label>
+        <input
+          type="text"
+          id="category"
+          value={category}
+          name="category"
+          onChange={handleChange("category")}
+          placeholder="e.g, Wellbeing."
         />
       </div>
       <div className="input-control">
@@ -89,11 +105,11 @@ function CreateContent() {
           name="description"
           id="description"
           rows={4}
-          placeholder="e.g, Watch a video about Next.js Auth"
+          placeholder="e.g, Prepare powerpoint slides for the meeting."
         ></textarea>
-      </div>
+      </div>  
       <div className="input-control">
-        <label htmlFor="date">Date</label>
+        <label htmlFor="date">Due Date</label>
         <input
           value={date}
           onChange={handleChange("date")}

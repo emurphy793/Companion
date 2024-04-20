@@ -8,17 +8,19 @@ import formatDate from "@/app/utils/formatDate";
 interface Props {
   title: string;
   description: string;
+  category: string;
   date: string;
   isCompleted: boolean;
   id: string;
 }
 
-function TaskItem({ title, description, date, isCompleted, id }: Props) {
+function TaskItem({ title, description, category, date, isCompleted, id }: Props) {
   const { theme, deleteTask, updateTask } = useGlobalState();
   return (
     <TaskItemStyled theme={theme}>
       <h1>{title}</h1>
       <p>{description}</p>
+      <p>Category - {category}</p>
       <p className="date">{formatDate(date)}</p>
       <div className="task-footer">
         {isCompleted ? (
