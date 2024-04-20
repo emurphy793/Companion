@@ -1,4 +1,4 @@
-const moment = require("moment/moment");
+import moment from "moment/moment";
 
 const formatDate = (date) => {
   return moment(date).format("DD/MM/YYYY");

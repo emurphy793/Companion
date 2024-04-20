@@ -1,23 +1,32 @@
 "use client";
 import { useGlobalState } from "@/app/context/globalProvider";
-import React, {useState, useEffect} from "react";
+import React from "react";
 import styled from "styled-components";
 import CreateContent from "../Modals/CreateContent";
 import TaskItem from "../TaskItem/TaskItem";
 import { add, plus } from "@/app/utils/Icons";
 import Modal from "../Modals/Modal"
-import CategoryDropdown from "../CategoryDropdown/CategoryDropdown";
+
+interface Task {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  date: string;
+  isCompleted: boolean;
+}
 
 interface Props {
   title: string;
-  tasks: any[];
+  tasks: Task[];
 }
 
 function Tasks({ title, tasks }: Props) {
-  const { theme, isLoading, openModal, modal, categories, selectedCategory, setSelectedCategory } = useGlobalState();
+  const { theme, openModal, modal, categories, selectedCategory, setSelectedCategory } = useGlobalState();
   
 
   // State to hold filtered tasks
+  /*
   const [filteredTasks, setFilteredTasks] = useState([]);
   
   useEffect(() => {
@@ -35,8 +44,7 @@ function Tasks({ title, tasks }: Props) {
     };
     */
 
-    const handleChange = (event) => {
-      console.log("YOYO" + event.target.value);
+    const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
       setSelectedCategory(event.target.value);
     };
     
@@ -48,7 +56,7 @@ function Tasks({ title, tasks }: Props) {
 
       <select value={selectedCategory || ''} onChange={handleChange}>
       <option value="">All Categories</option>
-      {categories.map((category, index) => (
+      {categories.map((category: string, index: number) => (
         <option key={index} value={category}>
           {category}
         </option>

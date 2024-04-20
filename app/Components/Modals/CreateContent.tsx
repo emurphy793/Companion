@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import toast from "react-hot-toast";
 import styled from "styled-components";
 import Button from "../Button/Button";
-import { add, plus } from "@/app/utils/Icons";
+import { add } from "@/app/utils/Icons";
 
 function CreateContent() {
   const [title, setTitle] = useState("");
@@ -17,7 +17,7 @@ function CreateContent() {
 
   const { theme, allTasks, closeModal } = useGlobalState();
 
-  const handleChange = (name: string) => (e: any) => {
+  const handleChange = (name: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
     switch (name) {
       case "title":
         setTitle(e.target.value);
@@ -42,7 +42,14 @@ function CreateContent() {
     }
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleTextAreaChange = (name: string) => (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    switch (name) {
+      case "description":
+        setDescription(e.target.value);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const task = {
@@ -101,12 +108,11 @@ function CreateContent() {
         <label htmlFor="description">Description</label>
         <textarea
           value={description}
-          onChange={handleChange("description")}
+          onChange={handleTextAreaChange("description")}
           name="description"
           id="description"
           rows={4}
-          placeholder="e.g, Prepare powerpoint slides for the meeting."
-        ></textarea>
+        />
       </div>  
       <div className="input-control">
         <label htmlFor="date">Due Date</label>

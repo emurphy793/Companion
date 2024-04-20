@@ -11,7 +11,7 @@ export const GlobalUpdateContext = createContext();
 export const GlobalProvider = ({ children }) => {
   const { user } = useUser();
 
-  const [selectedTheme, setSelectedTheme] = useState(0);
+  const [selectedTheme] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [modal, setModal] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
@@ -58,7 +58,7 @@ export const GlobalProvider = ({ children }) => {
 
   const deleteTask = async (id) => {
     try {
-      const res = await axios.delete(`/api/tasks/${id}`);
+      await axios.delete(`/api/tasks/${id}`);
       toast.success("Task deleted");
 
       allTasks();
@@ -70,7 +70,7 @@ export const GlobalProvider = ({ children }) => {
 
   const updateTask = async (task) => {
     try {
-      const res = await axios.put(`/api/tasks`, task);
+      await axios.put(`/api/tasks`, task);
 
       toast.success("Task updated");
 
@@ -81,10 +81,12 @@ export const GlobalProvider = ({ children }) => {
     }
   };
 
+  /*
   const completedTasks = tasks.filter((task) => task.isCompleted === true);
   const importantTasks = tasks.filter((task) => task.isImportant === true);
   const incompleteTasks = tasks.filter((task) => task.isCompleted === false);
-
+  */
+ 
   React.useEffect(() => {
     if (user) {
       fetchCategories();
