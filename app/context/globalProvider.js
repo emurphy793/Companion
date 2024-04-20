@@ -15,6 +15,7 @@ export const GlobalProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [modal, setModal] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
+  const [categories, setCategories] = useState([]);
 
   const [tasks, setTasks] = useState([]);
 
@@ -30,6 +31,15 @@ export const GlobalProvider = ({ children }) => {
 
   const collapseMenu = () => {
     setCollapsed(!collapsed);
+  };
+
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get("/api/categories");
+      setCategories(response.data.map(item => item.category)); // Extracting only the category name
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
   };
 
   const allTasks = async () => {
@@ -81,7 +91,10 @@ export const GlobalProvider = ({ children }) => {
   const incompleteTasks = tasks.filter((task) => task.isCompleted === false);
 
   React.useEffect(() => {
-    if (user) allTasks();
+    if (user) {
+      allTasks();
+      fetchCategories();
+    }
   }, [user]);
 
   return (
@@ -101,6 +114,7 @@ export const GlobalProvider = ({ children }) => {
         allTasks,
         collapsed,
         collapseMenu,
+        categories,
       }}
     >
       <GlobalUpdateContext.Provider value={{}}>

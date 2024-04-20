@@ -1,24 +1,36 @@
 "use client";
 import { useGlobalState } from "@/app/context/globalProvider";
-import React from "react";
+import React, {useState} from "react";
 import styled from "styled-components";
 import CreateContent from "../Modals/CreateContent";
 import TaskItem from "../TaskItem/TaskItem";
 import { add, plus } from "@/app/utils/Icons";
 import Modal from "../Modals/Modal"
+import CategoryDropdown from "../CategoryDropdown/CategoryDropdown";
 
 interface Props {
   title: string;
-  tasks: any[];
 }
 
-function Tasks({ title, tasks }: Props) {
-  const { theme, isLoading, openModal, modal } = useGlobalState();
+function Tasks({ title }: Props) {
+  const { theme, isLoading, openModal, modal, tasks, categories } = useGlobalState();
+  const [selectedCategory, setSelectedCategory] = useState('');
+
+    // Filter tasks based on selected category
+    const filteredTasks = selectedCategory
+    ? tasks.filter(task => task.category === selectedCategory)
+    : tasks;
+
+    const handleSelectCategory = (category) => {
+      setSelectedCategory(category);
+    };
 
   return (
     <TaskStyled theme={theme}>
       {modal && <Modal content={<CreateContent />} />}
       <h1>{title}</h1>
+
+      <CategoryDropdown onSelectCategory={handleSelectCategory} />
 
       <button className="btn-rounded" onClick={openModal}>
         {plus}
