@@ -16,8 +16,8 @@ export const GlobalProvider = ({ children }) => {
   const [modal, setModal] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [categories, setCategories] = useState([]);
-
   const [tasks, setTasks] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('');
 
   const theme = themes[selectedTheme];
 
@@ -45,19 +45,14 @@ export const GlobalProvider = ({ children }) => {
   const allTasks = async () => {
     setIsLoading(true);
     try {
-      const res = await axios.get("/api/tasks");
-
-      const sorted = res.data.sort((a, b) => {
-        return (
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
-      });
-
+      const url = selectedCategory ? `/api/tasks?category=${selectedCategory}` : '/api/tasks';
+      const response = await axios.get(url);
+      const sorted = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
       setTasks(sorted);
-
       setIsLoading(false);
     } catch (error) {
-      console.log(error);
+      console.error("Error fetching tasks:", error);
+      setIsLoading(false);
     }
   };
 
@@ -92,10 +87,10 @@ export const GlobalProvider = ({ children }) => {
 
   React.useEffect(() => {
     if (user) {
-      allTasks();
       fetchCategories();
+      allTasks();
     }
-  }, [user]);
+  }, [user, selectedCategory]);
 
   return (
     <GlobalContext.Provider
@@ -104,9 +99,9 @@ export const GlobalProvider = ({ children }) => {
         tasks,
         deleteTask,
         isLoading,
-        completedTasks,
-        importantTasks,
-        incompleteTasks,
+        completedTasks: tasks.filter(task => task.isCompleted),        
+        importantTasks: tasks.filter(task => task.isImportant),
+        incompleteTasks: tasks.filter(task => !task.isCompleted),
         updateTask,
         modal,
         openModal,
@@ -115,6 +110,8 @@ export const GlobalProvider = ({ children }) => {
         collapsed,
         collapseMenu,
         categories,
+        selectedCategory,
+        setSelectedCategory,
       }}
     >
       <GlobalUpdateContext.Provider value={{}}>

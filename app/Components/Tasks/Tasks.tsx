@@ -1,6 +1,6 @@
 "use client";
 import { useGlobalState } from "@/app/context/globalProvider";
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import styled from "styled-components";
 import CreateContent from "../Modals/CreateContent";
 import TaskItem from "../TaskItem/TaskItem";
@@ -13,31 +13,53 @@ interface Props {
 }
 
 function Tasks({ title }: Props) {
-  const { theme, isLoading, openModal, modal, tasks, categories } = useGlobalState();
-  const [selectedCategory, setSelectedCategory] = useState('');
+  const { theme, isLoading, openModal, modal, tasks, categories, selectedCategory, setSelectedCategory } = useGlobalState();
+  
 
+  // State to hold filtered tasks
+  const [filteredTasks, setFilteredTasks] = useState([]);
+  
+  useEffect(() => {
     // Filter tasks based on selected category
-    const filteredTasks = selectedCategory
-    ? tasks.filter(task => task.category === selectedCategory)
-    : tasks;
-
+    if (selectedCategory && selectedCategory !== "All Categories") {
+      const filtered = tasks.filter(task => task.category === selectedCategory);
+      setFilteredTasks(filtered);
+    } else {
+      setFilteredTasks(tasks); // Show all tasks if 'All Categories' or no category is selected
+    }
+  }, [tasks, selectedCategory]); // Re-run filtering when tasks or selectedCategory changes
+    /*
     const handleSelectCategory = (category) => {
       setSelectedCategory(category);
     };
+    */
+
+    const handleChange = (event) => {
+      console.log("YOYO" + event.target.value);
+      setSelectedCategory(event.target.value);
+    };
+    
 
   return (
     <TaskStyled theme={theme}>
       {modal && <Modal content={<CreateContent />} />}
       <h1>{title}</h1>
 
-      <CategoryDropdown onSelectCategory={handleSelectCategory} />
+      <select value={selectedCategory || ''} onChange={handleChange}>
+      <option value="">All Categories</option>
+      {categories.map((category, index) => (
+        <option key={index} value={category}>
+          {category}
+        </option>
+      ))}
+    </select>
 
       <button className="btn-rounded" onClick={openModal}>
         {plus}
-      </button>
+      </button>      
 
       <div className="tasks grid">
-        {tasks.map((task) => (
+        {(selectedCategory ? tasks.filter(task => task.category === selectedCategory) : tasks).map((task) => (
           <TaskItem
             key={task.id}
             title={task.title}
