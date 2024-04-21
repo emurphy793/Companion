@@ -31,8 +31,10 @@ function Tasks({ title, tasks }: Props) {
     // Filter tasks based on selected category
     if (selectedCategory && selectedCategory !== "All Categories") {
       const filtered = tasks.filter(task => task.category === selectedCategory);
+      console.log(filteredTasks);
       setFilteredTasks(filtered);
     } else {
+      console.log(tasks);
       setFilteredTasks(tasks); // Show all tasks if 'All Categories' or no category is selected
     }
   }, [tasks, selectedCategory]); // Re-run filtering when tasks or selectedCategory changes
