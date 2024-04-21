@@ -1,6 +1,6 @@
 "use client";
 import { useGlobalState } from "@/app/context/globalProvider";
-import React from "react";
+import React, {useState, useEffect} from "react";
 import styled from "styled-components";
 import CreateContent from "../Modals/CreateContent";
 import TaskItem from "../TaskItem/TaskItem";
@@ -26,9 +26,7 @@ function Tasks({ title, tasks }: Props) {
   
 
   // State to hold filtered tasks
-  /*
-  const [filteredTasks, setFilteredTasks] = useState([]);
-  
+  const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);  
   useEffect(() => {
     // Filter tasks based on selected category
     if (selectedCategory && selectedCategory !== "All Categories") {
