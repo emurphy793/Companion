@@ -47,7 +47,7 @@ export const GlobalProvider = ({ children }) => {
     try {
       const url = selectedCategory ? `/api/tasks?category=${selectedCategory}` : '/api/tasks';
       const response = await axios.get(url);
-      const sorted = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      const sorted = response.data.sort((a, b) => new Date(a.date) - new Date(b.date));
       setTasks(sorted);
       setIsLoading(false);
     } catch (error) {
